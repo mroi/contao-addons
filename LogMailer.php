@@ -27,7 +27,7 @@ class LogMailer extends \System
 			$mail = new \Email();
 			$mail->from = "noreply@" . \Environment::get('host');
 			$mail->fromName = "Contao Log Mailer";
-			$mail->subject = "Log-Einträge für " . \Environment::get('host');
+			$mail->subject = "Log-Einträge für " . $GLOBALS['TL_CONFIG']['websiteTitle'];
 			
 			$mail->html =
 				"<!DOCTYPE html>" .
@@ -44,7 +44,7 @@ class LogMailer extends \System
 				"th,td{padding:2px 1ex 2px 1ex;}" .
 				" --></style></head>" .
 				"<body>" .
-				"<h1>" . \Environment::get('host') . "</h1>\n" .
+				"<h1>" . $GLOBALS['TL_CONFIG']['websiteTitle'] . "</h1>\n" .
 				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $now) . "</p>\n\n" .
 				"<table><thead><tr><th>Zeit</th>\t<th>Benutzer</th>\t<th>Aktion</th></tr></thead><tbody>\n";
 			while ($logEntry->next())
