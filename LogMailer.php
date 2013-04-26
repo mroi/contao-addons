@@ -37,9 +37,9 @@ class LogMailer extends \System
 				"h1{margin-bottom:0;font-size:1.3em;text-transform:uppercase;}" .
 				"p{margin-top:0;margin-bottom:1em;font-size:1.3em;}" .
 				"table{border-collapse:collapse;}" .
-				"thead tr:nth-child(odd){color:#fff;background-color:#79b;}" .
-				"tr{background-color:#e7edf3;}" .
-				"tr:nth-child(odd){background-color:#fff;}" .
+				"thead tr{color:#fff;background-color:#79b;}" .
+				"tbody tr:nth-child(odd){background-color:#fff;}" .
+				"tbody tr:nth-child(even){background-color:#e7edf3;}" .
 				"th{text-align:left}" .
 				"th,td{padding:2px 1ex 2px 1ex;}" .
 				" --></style></head>" .
