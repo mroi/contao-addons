@@ -33,6 +33,7 @@ class LogMailer extends \System
 				"<!DOCTYPE html>" .
 				"<html>" .
 				"<head><style type=\"text/css\"><!-- " .
+				"body{text-rendering:optimizeLegibility;}" .
 				"a{color:#000;text-decoration:none;}" .
 				"h1{margin-bottom:0;font-size:1.3em;text-transform:uppercase;}" .
 				"p{margin-top:0;margin-bottom:1em;font-size:1.3em;}" .
