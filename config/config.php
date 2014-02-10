@@ -1,2 +1,2 @@
 <?php
-$GLOBALS['TL_CRON']['daily'][] = array('LogMailer', 'run');
+$GLOBALS['TL_CRON']['daily'][] = array('ContaoLogMailer', 'run');

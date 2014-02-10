@@ -1,5 +1,5 @@
 <?php
 ClassLoader::addClasses(array
 (
-	'LogMailer' => 'system/modules/logmailer/LogMailer.php'
+	'ContaoLogMailer' => 'system/modules/maintenance/classes/ContaoLogMailer.php'
 ));

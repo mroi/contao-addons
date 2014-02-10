@@ -1,6 +1,6 @@
 <?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
 
-class LogMailer extends \System
+class ContaoLogMailer extends \System
 {
 	public function __construct()
 	{
