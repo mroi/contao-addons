@@ -32,7 +32,7 @@ class InternalLogMailer extends \System
 			$mail->html =
 				"<!DOCTYPE html>" .
 				"<html>" .
-				"<head><style type=\"text/css\"><!-- " .
+				"<head><style type=\"text/css\">" .
 				"body{text-rendering:optimizeLegibility;}" .
 				"a{color:#000;text-decoration:none;}" .
 				"h1{margin-bottom:0;font-size:1.3em;text-transform:uppercase;}" .
@@ -43,7 +43,7 @@ class InternalLogMailer extends \System
 				"tbody tr:nth-child(even){background-color:#fce9d9;}" .
 				"th{text-align:left}" .
 				"th,td{padding:2px 1ex 2px 1ex;}" .
-				" --></style></head>" .
+				"</style></head>" .
 				"<body>" .
 				"<h1>" . $GLOBALS['TL_CONFIG']['websiteTitle'] . "</h1>\n" .
 				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $now) . "</p>\n\n" .
