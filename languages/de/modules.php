@@ -1,2 +1,2 @@
 <?php
-$GLOBALS['TL_LANG']['MOD']['maintenance'] = array('Wartung', 'Führt regelmäßige Wartungsarbeiten durch');
+$GLOBALS['TL_LANG']['MOD']['addons'] = array('Anpassungen', 'eigene Änderungen und Ergänzungen');
