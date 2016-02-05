@@ -1,5 +1,5 @@
 <?php
 ClassLoader::addClasses(array
 (
-	'ContaoLogMailer' => 'system/modules/addons/classes/ContaoLogMailer.php'
+	'InternalLogMailer' => 'system/modules/addons/classes/InternalLogMailer.php'
 ));
