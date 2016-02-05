@@ -20,7 +20,7 @@ class InternalLogMailer extends \System
 			$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('logmailer', $lastRun)");
 		
 		$logEntry = $this->Database->query("SELECT * FROM tl_log WHERE " .
-			"tstamp>$lastRun AND tstamp<=$now AND action!='CRON'");
+			"tstamp>$lastRun AND tstamp<=$now AND action!='CRON' ORDER BY tstamp");
 		
 		if ($logEntry->numRows > 0)
 		{
