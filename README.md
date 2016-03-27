@@ -8,6 +8,9 @@ The individual pieces are:
 * Daily mail of Contao log messages. This is especially helpful, when I am the formal
   administrator of a site, but other people can edit some of the content. I just like to
   have an overview of what’s going on.
+* Download tables as CSV. An operation button is added to tables so they can be exported to 
+  CSV files. It’s preconfigured for the members table, but it can be used to export columns 
+  from any DCA-backed database table in Contao.
 
 To use this extension, place a copy of it in Contao’s `system/modules/` directory as a 
 subdirectory called `addons`. Since this extension targets my use cases, I did not add 
