@@ -12,6 +12,9 @@ class CSVDownloader
 	/* URL routing key for the CSV download operation */
 	const KEY = 'csv';
 
+	/* delimiter for compound values */
+	const DELIM = ', ';
+
 	/* cache for foreigh key resolution */
 	private $arrForeignCache = array();
 
@@ -149,7 +152,7 @@ class CSVDownloader
 				$sub = $this->arrForeignCache[$sub];
 			}
 		}
-		
-		return implode(', ', $arrValue);
+
+		return implode(self::DELIM, $arrValue);
 	}
 }
