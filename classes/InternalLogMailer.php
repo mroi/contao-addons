@@ -1,34 +1,31 @@
 <?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
 
-class InternalLogMailer extends \System
-{
-	public function __construct()
-	{
+class InternalLogMailer extends \System {
+
+	public function __construct() {
 		parent::__construct();
 		$this->import('Database');
 	}
-	
-	public function run()
-	{
+
+	public function run() {
 		$now = time();
 		$lastRun = $now - 24 * 60 * 60;
-		
+
 		$timestamp = $this->Database->prepare("SELECT * FROM tl_cron WHERE name ='logmailer'")->limit(1)->execute();
 		if ($timestamp->numRows > 0)
 			$lastRun = $timestamp->value;
 		else
 			$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('logmailer', $lastRun)");
-		
+
 		$logEntry = $this->Database->query("SELECT * FROM tl_log WHERE " .
 			"tstamp>$lastRun AND tstamp<=$now AND action!='CRON' ORDER BY tstamp");
-		
-		if ($logEntry->numRows > 0)
-		{
+
+		if ($logEntry->numRows > 0) {
 			$mail = new \Email();
 			$mail->from = "noreply@" . \Environment::get('host');
 			$mail->fromName = "Contao Log Mailer";
 			$mail->subject = "Log-Einträge für " . $GLOBALS['TL_CONFIG']['websiteTitle'];
-			
+
 			$mail->html =
 				"<!DOCTYPE html>" .
 				"<html>" .
@@ -51,11 +48,11 @@ class InternalLogMailer extends \System
 			while ($logEntry->next())
 				$mail->html .= "<tr><td>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $logEntry->tstamp) . "</td>\t<td>" . $logEntry->username . "</td>\t<td>" . $logEntry->text . "</td></tr>\n";
 			$mail->html .= "</tbody></table></body></html>";
-			
+
 			$mail->text = strip_tags($mail->html);
 			$mail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
 		}
-		
+
 		$this->Database->query("UPDATE tl_cron SET value=$now WHERE name='logmailer'");
 	}
 }
