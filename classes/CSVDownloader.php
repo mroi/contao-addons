@@ -1,4 +1,4 @@
-<?php if (!defined('TL_ROOT')) die('You cannot access this file directly!');
+<?php
 
 /* add global operation to download tables as CSV files */
 class CSVDownloader {
