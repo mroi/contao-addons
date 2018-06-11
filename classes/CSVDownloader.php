@@ -20,7 +20,7 @@ class CSVDownloader {
 	/* cache for foreign key resolution */
 	private $arrForeignCache = array();
 
-	public function loadDataContainer($strName) {
+	public function loadDataContainerHook($strName) {
 		if (array_key_exists($strName, $this->arrDCAs)) {
 			// create the CSV download operation
 			$arrOperation = array(
