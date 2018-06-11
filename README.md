@@ -11,6 +11,10 @@ The individual pieces are:
 * Download tables as CSV. An operation button is added to tables so they can be exported to 
   CSV files. It’s preconfigured for the members table, but it can be used to export columns 
   from any DCA-backed database table in Contao.
+* Enable newletter recipients with multiple mail addresses. Individual Contao members can be 
+  subscribed to newsletters. However, only a single mail address is supported per subscribed 
+  member. This modification extends newsletters to accept recipients with multiple, 
+  comma-separated addresses.
 
 To use this extension, place a copy of it in Contao’s `system/modules/` directory as a 
 subdirectory called `addons`. Since this extension targets my use cases, I did not add 
