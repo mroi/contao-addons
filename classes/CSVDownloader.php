@@ -1,5 +1,7 @@
 <?php
 
+namespace Addons;
+
 /* add global operation to download tables as CSV files */
 class CSVDownloader {
 

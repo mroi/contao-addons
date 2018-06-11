@@ -1,5 +1,6 @@
 <?php
+ClassLoader::addNamespace('Addons');
 ClassLoader::addClasses(array(
-	'CSVDownloader' => 'system/modules/addons/classes/CSVDownloader.php',
-	'InternalLogMailer' => 'system/modules/addons/classes/InternalLogMailer.php'
+	'Addons\\CSVDownloader' => 'system/modules/addons/classes/CSVDownloader.php',
+	'Addons\\InternalLogMailer' => 'system/modules/addons/classes/InternalLogMailer.php'
 ));

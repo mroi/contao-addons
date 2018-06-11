@@ -1,5 +1,7 @@
 <?php
 
+namespace Addons;
+
 class InternalLogMailer extends \System {
 
 	public function __construct() {
