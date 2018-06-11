@@ -17,7 +17,7 @@ class CSVDownloader {
 	/* delimiter for compound values */
 	const DELIM = ', ';
 
-	/* cache for foreigh key resolution */
+	/* cache for foreign key resolution */
 	private $arrForeignCache = array();
 
 	public function loadDataContainer($strName) {
