@@ -13,13 +13,14 @@ The individual pieces are:
   from any DCA-backed database table in Contao.
 * Enable members with multiple mail addresses. This requires special handling of 
   newsletters, because only individual mail addresses can be subscribed to a newsletter. 
-  This modification therefore modifies how members subscriptions are handled to accept 
-  multiple, comma-separated addresses.
+  This change therefore modifies how members subscriptions are handled to accept multiple, 
+  comma-separated addresses.
 
 To use this extension, place a copy of it in Contao’s `system/modules/` directory as a 
 subdirectory called `addons`. Since this extension targets my use cases, I did not add 
 configurability. You may have to change the code. Also, be aware that most output will be in 
 German. Please share if you happen to implement proper localization.
 
+___
 This work is licensed under the [WTFPL](http://www.wtfpl.net/), so you can do anything you 
 want with it.
