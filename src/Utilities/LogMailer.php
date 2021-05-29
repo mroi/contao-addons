@@ -1,8 +1,8 @@
 <?php
+namespace Mroi\ContaoAddons\Utilities;
 
-namespace Addons;
 
-class InternalLogMailer extends \System {
+class LogMailer extends \System {
 
 	public function __construct() {
 		parent::__construct();
@@ -13,11 +13,11 @@ class InternalLogMailer extends \System {
 		$now = time();
 		$lastRun = $now - 24 * 60 * 60;
 
-		$timestamp = $this->Database->prepare("SELECT * FROM tl_cron WHERE name ='logmailer'")->limit(1)->execute();
+		$timestamp = $this->Database->prepare("SELECT * FROM tl_cron_job WHERE name ='logmailer'")->limit(1)->execute();
 		if ($timestamp->numRows > 0)
-			$lastRun = $timestamp->value;
+			$lastRun = $timestamp->lastRun;
 		else
-			$this->Database->query("INSERT INTO tl_cron (name, value) VALUES ('logmailer', $lastRun)");
+			$this->Database->query("INSERT INTO tl_cron_job (name, lastRun) VALUES ('logmailer', $lastRun)");
 
 		$logEntry = $this->Database->query("SELECT * FROM tl_log WHERE " .
 			"tstamp>$lastRun AND tstamp<=$now AND action!='CRON' ORDER BY tstamp");
@@ -55,6 +55,6 @@ class InternalLogMailer extends \System {
 			$mail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
 		}
 
-		$this->Database->query("UPDATE tl_cron SET value=$now WHERE name='logmailer'");
+		$this->Database->query("UPDATE tl_cron_job SET lastRun=$now WHERE name='logmailer'");
 	}
 }

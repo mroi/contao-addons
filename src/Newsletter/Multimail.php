@@ -1,9 +1,9 @@
 <?php
+namespace Mroi\ContaoAddons\Newsletter;
 
-namespace Addons;
 
 /* send newsletter mails to multiple comma-separated recipients */
-class NewsletterMultimail extends \Contao\Newsletter {
+class Multimail extends \Contao\Newsletter {
 
 	public function loadDataContainerHook($strName) {
 		if ($strName == 'tl_member') {
@@ -13,10 +13,11 @@ class NewsletterMultimail extends \Contao\Newsletter {
 			$GLOBALS['TL_DCA']['tl_member']['fields']['email']['eval']['mandatory'] = false;
 			$GLOBALS['TL_DCA']['tl_member']['fields']['email']['eval']['unique'] = false;
 			// change the newsletter load callback
-			$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] = array_diff($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'], array(array('Newsletter', 'updateAccount')));
-			$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array('NewsletterMultimail', 'updateAccount');
+			$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'] = array_udiff($GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'],
+				array(array('Newsletter', 'updateAccount')), function ($a, $b) { return $a != $b; });
+			$GLOBALS['TL_DCA']['tl_member']['config']['onload_callback'][] = array(get_class(), 'updateAccount');
 			// change the newsletter save callback
-			$GLOBALS['TL_DCA']['tl_member']['fields']['newsletter']['save_callback'] = array(array('NewsletterMultimail', 'synchronize'));
+			$GLOBALS['TL_DCA']['tl_member']['fields']['newsletter']['save_callback'] = array(array(get_class(), 'synchronize'));
 		}
 	}
 
@@ -40,36 +41,36 @@ class NewsletterMultimail extends \Contao\Newsletter {
 		if ($objUser->numRows < 1)
 			// no such member
 			return $varValue;
-		if ($varValue == $objUser->newsletter || $objUser->email == '')
+		if ($varValue == $objUser->newsletter || !$objUser->email)
 			// no need to change anything
 			return $varValue;
 
 		$time = time();
-		$varValue = deserialize($varValue, true);
+		$varValue = \StringUtil::deserialize($varValue, true);
 		$arrChannels = $this->Database->query("SELECT id FROM tl_newsletter_channel")->fetchEach('id');
 		$arrDelete = array_values(array_diff($arrChannels, $varValue));
 
 		// delete from unsubscribed newsletters
-		if (!empty($arrDelete) && is_array($arrDelete)) {
+		if (!empty($arrDelete) && \is_array($arrDelete)) {
 			// TODO: do not remove, when still needed due to another member’s entry
 			foreach (trimsplit(',', $objUser->email) as $strEmail) {
-				$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('intval', $arrDelete)) . ") AND email=?")
+				$this->Database->prepare("DELETE FROM tl_newsletter_recipients WHERE pid IN(" . implode(',', array_map('\intval', $arrDelete)) . ") AND email=?")
 							   ->execute($strEmail);
 			}
 		}
 
 		// add to newly subscribed newsletters
-		foreach ($varValue as $varId) {
-			$intId = intval($varId);
+		foreach ($varValue as $intId) {
+			$intId = (int)$intId;
 			if ($intId < 1) continue;
 
 			foreach (trimsplit(',', $objUser->email) as $strEmail) {
 				$objRecipient = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE pid=? AND email=?")
-											->execute($intId, $strEmail);
+				                               ->execute($intId, $strEmail);
 
 				if ($objRecipient->count < 1) {
-					$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?, ip=?")
-								   ->execute($intId, $strEmail, ($objUser->disable ? '' : 1), '', '');
+					$this->Database->prepare("INSERT INTO tl_newsletter_recipients SET pid=?, tstamp=$time, email=?, active=?, addedOn=?")
+								   ->execute($intId, $strEmail, ($objUser->disable ? '' : 1), '');
 				}
 			}
 		}
@@ -80,7 +81,7 @@ class NewsletterMultimail extends \Contao\Newsletter {
 	public function updateAccount() {
 		$intUser = \Input::get('id');
 		if (TL_MODE == 'FE') {
-			$this->import('FrontendUser', 'User');
+			$this->import(\FrontendUser::class, 'User');
 			$intUser = $this->User->id;
 		}
 		if (!$intUser) return;
@@ -91,11 +92,11 @@ class NewsletterMultimail extends \Contao\Newsletter {
 									  ->execute($intUser);
 			if ($objUser->numRows) {
 				$strEmail = \Input::post('email', true);
-				if (!empty($_POST) && $strEmail != '' && $strEmail != $objUser->email) {
+				if (!empty($_POST) && $strEmail && $strEmail != $objUser->email) {
 					// email address has changed
-					// TODO: split into individial addresses and update
+					// FIXME: split into individial addresses and update
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET email=? WHERE email=?")
-												   ->execute($strEmail, $objUser->email);
+					               ->execute($strEmail, $objUser->email);
 					$objUser->email = $strEmail;
 				}
 
@@ -110,10 +111,10 @@ class NewsletterMultimail extends \Contao\Newsletter {
 					else
 						$arrSubscriptions = array();
 				}
-				if (empty($arrSubscriptions) || empty($objUser->email))
-					$strNewsletters = '';
-				else
+				if (!empty($arrSubscriptions) && !empty($objUser->email))
 					$strNewsletters = serialize($arrSubscriptions);
+				else
+					$strNewsletters = '';
 
 				$this->Database->prepare("UPDATE tl_member SET newsletter=? WHERE id=?")
 							   ->execute($strNewsletters, $intUser);
@@ -122,7 +123,7 @@ class NewsletterMultimail extends \Contao\Newsletter {
 					$this->User->newsletter = $strNewsletters;
 				} elseif (!empty($_POST) && \Input::post('disable') != $objUser->disable) {
 					// user activation status has changed
-					// TODO: update mail addresses individually
+					// FIXME: update mail addresses individually
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
 								   ->execute((\Input::post('disable') ? '' : 1), $objUser->email);
 

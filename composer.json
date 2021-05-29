@@ -1,0 +1,23 @@
+{
+	"name": "mroi/contao-addons",
+	"description": "extra functionality and customizations for Contao CMS",
+	"type": "contao-bundle",
+	"require": {
+		"contao/core-bundle": "^4.10"
+	},
+	"license": "WTFPL",
+	"authors": [
+		{
+			"name": "Michael Roitzsch",
+			"email": "reactorcontrol@icloud.com"
+		}
+	],
+	"autoload": {
+		"psr-4": {
+			"Mroi\\ContaoAddons\\": "src/"
+		}
+	},
+	"extra": {
+		"contao-manager-plugin": "Mroi\\ContaoAddons\\Plugin"
+	}
+}

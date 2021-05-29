@@ -1,6 +1,6 @@
 <?php
+namespace Mroi\ContaoAddons\Utilities;
 
-namespace Addons;
 
 /* add global operation to download tables as CSV files */
 class CSVDownloader {
@@ -38,7 +38,7 @@ class CSVDownloader {
 				foreach ($arrGroup as $strModuleName => &$arrModule) {
 					if (isset($arrModule['tables']) && in_array($strName, $arrModule['tables'])) {
 						if (!isset($arrModule[self::KEY]))
-							$arrModule[self::KEY] = array(get_class($this), 'exportCSV');
+							$arrModule[self::KEY] = array(get_class(), 'exportCSV');
 						else
 							\System::log('Module "' . $strModuleName . '" already contains key  "' . self::KEY . '"', __METHOD__, TL_ERROR);
 					}
