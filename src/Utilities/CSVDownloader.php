@@ -26,7 +26,8 @@ class CSVDownloader {
 			$arrOperation = array(
 				'label' => &$GLOBALS['TL_LANG']['MSC']['csv_export'],
 				'href'  => 'key=' . self::KEY,
-				'class' => 'header_css_import'
+				'class' => 'header_icon',
+				'attributes' => 'style="background-image:url(system/themes/flexible/icons/db.svg)"'
 			);
 			// add the operation to the DCA
 			$GLOBALS['TL_DCA'][$strName]['list']['global_operations'] = array_merge(
