@@ -40,23 +40,23 @@ class CSVDownloader {
 						if (!isset($arrModule[self::KEY]))
 							$arrModule[self::KEY] = array(get_class(), 'exportCSV');
 						else
-							\System::log('Module "' . $strModuleName . '" already contains key  "' . self::KEY . '"', __METHOD__, TL_ERROR);
+							\Contao\System::log('Module "' . $strModuleName . '" already contains key  "' . self::KEY . '"', __METHOD__, TL_ERROR);
 					}
 				}
 			}
 		}
 	}
 
-	public function exportCSV(\DataContainer $dc) {
+	public function exportCSV(\Contao\DataContainer $dc) {
 		// make sure we are operating on a simple table (i.e. not a tree)
 		if (!is_a($dc, 'Contao\DC_Table') || $dc->rootIds !== null) {
-			\System::log('Data container "' . $dc->table . '" not suitable for CSV export', __METHOD__, TL_ERROR);
+			\Contao\System::log('Data container "' . $dc->table . '" not suitable for CSV export', __METHOD__, TL_ERROR);
 			exit;
 		}
 
 		// try to use localized module name as file name
-		if (is_array($GLOBALS['TL_LANG']['MOD'][\Input::get('do')]))
-			$strFileName = $GLOBALS['TL_LANG']['MOD'][\Input::get('do')][0];
+		if (is_array($GLOBALS['TL_LANG']['MOD'][\Contao\Input::get('do')]))
+			$strFileName = $GLOBALS['TL_LANG']['MOD'][\Contao\Input::get('do')][0];
 		else
 			$strFileName = $dc->table;
 		$strFileName .= '.csv';
@@ -93,7 +93,7 @@ class CSVDownloader {
 	}
 
 	/* format one element of a result row */
-	private function prettyPrint(\DataContainer $dc, $column, $value) {
+	private function prettyPrint(\Contao\DataContainer $dc, $column, $value) {
 		// deserialize compound value
 		$arrValue = deserialize($value);
 		if (!is_array($arrValue)) {

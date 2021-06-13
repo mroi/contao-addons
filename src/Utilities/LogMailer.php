@@ -2,7 +2,7 @@
 namespace Mroi\ContaoAddons\Utilities;
 
 
-class LogMailer extends \System {
+class LogMailer extends \Contao\System {
 
 	public function __construct() {
 		parent::__construct();
@@ -23,8 +23,8 @@ class LogMailer extends \System {
 			"tstamp>$lastRun AND tstamp<=$now AND action!='CRON' ORDER BY tstamp");
 
 		if ($logEntry->numRows > 0) {
-			$mail = new \Email();
-			$mail->from = "noreply@" . \Environment::get('host');
+			$mail = new \Contao\Email();
+			$mail->from = "noreply@" . \Contao\Environment::get('host');
 			$mail->fromName = "Contao Log Mailer";
 			$mail->subject = "Log-Einträge für " . $GLOBALS['TL_CONFIG']['websiteTitle'];
 
