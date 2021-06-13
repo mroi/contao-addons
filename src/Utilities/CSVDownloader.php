@@ -48,6 +48,21 @@ class CSVDownloader {
 		}
 	}
 
+	public function loadLanguageFileHook($strName, $strLanguage) {
+		if (array_key_exists($strName, $this->arrDCAs)) {
+			switch (true) {
+			case substr($strLanguage, 0, 2) == 'de':
+				$GLOBALS['TL_LANG']['MSC']['csv_export'][0] = 'CSV-Export';
+				$GLOBALS['TL_LANG']['MSC']['csv_export'][1] = 'Daten als CSV-Datei herunterladen';
+				break;
+			default:
+				$GLOBALS['TL_LANG']['MSC']['csv_export'][0] = 'CSV export';
+				$GLOBALS['TL_LANG']['MSC']['csv_export'][1] = 'Download data as a CSV file';
+				break;
+			}
+		}
+	}
+
 	public function exportCSV(\Contao\DataContainer $dc) {
 		// make sure we are operating on a simple table (i.e. not a tree)
 		if (!is_a($dc, 'Contao\DC_Table') || $dc->rootIds !== null) {
