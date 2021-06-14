@@ -9,7 +9,7 @@ class LogMailer extends \Contao\System {
 		$this->import('Database');
 	}
 
-	public function run() {
+	public function __invoke(): void {
 		$now = time();
 		$lastRun = $now - 24 * 60 * 60;
 

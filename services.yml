@@ -1,0 +1,4 @@
+services:
+    Mroi\ContaoAddons\Utilities\LogMailer:
+        tags:
+            - { name: contao.cronjob, interval: daily }
