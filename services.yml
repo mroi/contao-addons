@@ -1,4 +1,6 @@
 services:
     Mroi\ContaoAddons\Utilities\LogMailer:
+        arguments:
+            - '@Contao\CoreBundle\Repository\CronJobRepository'
         tags:
             - { name: contao.cronjob, interval: daily }

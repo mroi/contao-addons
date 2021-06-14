@@ -1,26 +1,30 @@
 <?php
 namespace Mroi\ContaoAddons\Utilities;
 
+use Contao\CoreBundle\Repository\CronJobRepository;
+
 
 class LogMailer extends \Contao\System {
 
-	public function __construct() {
+	private $cronJobs;
+	private $lastRun;
+
+	public function __construct(CronJobRepository $cronJobs) {
+		$job = $cronJobs->findOneByName(get_class());
+		$this->cronJobs = $cronJobs;
+		$this->lastRun = $job ? $job->getLastRun()->getTimestamp() : null;
 		parent::__construct();
 		$this->import('Database');
 	}
 
 	public function __invoke(): void {
-		$now = time();
-		$lastRun = $now - 24 * 60 * 60;
+		$job = $this->cronJobs->findOneByName(get_class());
+		$currentRun = $job->getLastRun()->getTimestamp();
 
-		$timestamp = $this->Database->prepare("SELECT * FROM tl_cron_job WHERE name ='logmailer'")->limit(1)->execute();
-		if ($timestamp->numRows > 0)
-			$lastRun = $timestamp->lastRun;
-		else
-			$this->Database->query("INSERT INTO tl_cron_job (name, lastRun) VALUES ('logmailer', $lastRun)");
+		if (!$this->lastRun) $this->lastRun = $currentRun;
 
 		$logEntry = $this->Database->query("SELECT * FROM tl_log WHERE " .
-			"tstamp>$lastRun AND tstamp<=$now AND action!='CRON' ORDER BY tstamp");
+			"tstamp>{$this->lastRun} AND tstamp<=$currentRun AND action!='CRON' ORDER BY tstamp");
 
 		if ($logEntry->numRows > 0) {
 			$mail = new \Contao\Email();
@@ -45,7 +49,7 @@ class LogMailer extends \Contao\System {
 				"</style></head>" .
 				"<body>" .
 				"<h1>" . $GLOBALS['TL_CONFIG']['websiteTitle'] . "</h1>\n" .
-				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $now) . "</p>\n\n" .
+				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $this->lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $currentRun) . "</p>\n\n" .
 				"<table><thead><tr><th>Zeit</th>\t<th>Benutzer</th>\t<th>Aktion</th></tr></thead><tbody>\n";
 			while ($logEntry->next())
 				$mail->html .= "<tr><td>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $logEntry->tstamp) . "</td>\t<td>" . $logEntry->username . "</td>\t<td>" . $logEntry->text . "</td></tr>\n";
@@ -54,7 +58,5 @@ class LogMailer extends \Contao\System {
 			$mail->text = strip_tags($mail->html);
 			$mail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
 		}
-
-		$this->Database->query("UPDATE tl_cron_job SET lastRun=$now WHERE name='logmailer'");
 	}
 }
