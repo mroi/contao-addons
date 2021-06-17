@@ -23,10 +23,10 @@ class LogMailer extends \Contao\System {
 
 		if (!$this->lastRun) $this->lastRun = $currentRun;
 
-		$logEntry = $this->Database->query("SELECT * FROM tl_log WHERE " .
+		$logEntries = $this->Database->query("SELECT * FROM tl_log WHERE " .
 			"tstamp>{$this->lastRun} AND tstamp<=$currentRun AND action!='CRON' ORDER BY tstamp");
 
-		if ($logEntry->numRows > 0) {
+		if ($logEntries->numRows > 0) {
 			$mail = new \Contao\Email();
 			$mail->from = "noreply@" . \Contao\Environment::get('host');
 			$mail->fromName = "Contao Log Mailer";
@@ -51,8 +51,8 @@ class LogMailer extends \Contao\System {
 				"<h1>" . $GLOBALS['TL_CONFIG']['websiteTitle'] . "</h1>\n" .
 				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $this->lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $currentRun) . "</p>\n\n" .
 				"<table><thead><tr><th>Zeit</th>\t<th>Benutzer</th>\t<th>Aktion</th></tr></thead><tbody>\n";
-			while ($logEntry->next())
-				$mail->html .= "<tr><td>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $logEntry->tstamp) . "</td>\t<td>" . $logEntry->username . "</td>\t<td>" . $logEntry->text . "</td></tr>\n";
+			while ($logEntries->next())
+				$mail->html .= "<tr><td>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $logEntries->tstamp) . "</td>\t<td>" . $logEntries->username . "</td>\t<td>" . $logEntries->text . "</td></tr>\n";
 			$mail->html .= "</tbody></table></body></html>";
 
 			$mail->text = strip_tags($mail->html);
