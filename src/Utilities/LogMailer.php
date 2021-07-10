@@ -27,10 +27,13 @@ class LogMailer extends \Contao\System {
 			"tstamp>{$this->lastRun} AND tstamp<=$currentRun AND action!='CRON' ORDER BY tstamp");
 
 		if ($logEntries->numRows > 0) {
+			$page = \Contao\PageModel::findPublishedRootPages(array('order' => 'sorting'))[0];
+			$title = $page->pageTitle ?? 'Website';
+
 			$mail = new \Contao\Email();
 			$mail->from = "noreply@" . \Contao\Environment::get('host');
 			$mail->fromName = "Contao Log Mailer";
-			$mail->subject = "Log-Einträge für " . $GLOBALS['TL_CONFIG']['websiteTitle'];
+			$mail->subject = "Log-Einträge für " . $title;
 
 			$mail->html =
 				"<!DOCTYPE html>" .
@@ -48,7 +51,7 @@ class LogMailer extends \Contao\System {
 				"th,td{padding:2px 1ex 2px 1ex;}" .
 				"</style></head>" .
 				"<body>" .
-				"<h1>" . $GLOBALS['TL_CONFIG']['websiteTitle'] . "</h1>\n" .
+				"<h1>" . $title . "</h1>\n" .
 				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $this->lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $currentRun) . "</p>\n\n" .
 				"<table><thead><tr><th>Zeit</th>\t<th>Benutzer</th>\t<th>Aktion</th></tr></thead><tbody>\n";
 			while ($logEntries->next())
