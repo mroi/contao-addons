@@ -24,7 +24,9 @@ class LogMailer extends \Contao\System {
 		if (!$this->lastRun) $this->lastRun = $currentRun;
 
 		$logEntries = $this->Database->query("SELECT * FROM tl_log WHERE " .
-			"tstamp>{$this->lastRun} AND tstamp<=$currentRun AND action!='CRON' ORDER BY tstamp");
+			"func != 'Contao\Email::sendTo' AND " .
+			"tstamp > {$this->lastRun} AND tstamp <= $currentRun AND " .
+			"action != 'CRON' ORDER BY tstamp");
 
 		if ($logEntries->numRows > 0) {
 			$page = \Contao\PageModel::findPublishedRootPages(array('order' => 'sorting'))[0];
