@@ -52,14 +52,14 @@ class LogMailer extends \Contao\System {
 				"</style></head>" .
 				"<body>" .
 				"<h1>" . $title . "</h1>\n" .
-				"<p>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $this->lastRun) . " – " . date($GLOBALS['TL_CONFIG']['datimFormat'], $currentRun) . "</p>\n\n" .
+				"<p>" . date(\Contao\Config::get('datimFormat'), $this->lastRun) . " – " . date(\Contao\Config::get('datimFormat'), $currentRun) . "</p>\n\n" .
 				"<table><thead><tr><th>Zeit</th>\t<th>Benutzer</th>\t<th>Aktion</th></tr></thead><tbody>\n";
 			while ($logEntries->next())
-				$mail->html .= "<tr><td>" . date($GLOBALS['TL_CONFIG']['datimFormat'], $logEntries->tstamp) . "</td>\t<td>" . $logEntries->username . "</td>\t<td>" . $logEntries->text . "</td></tr>\n";
+				$mail->html .= "<tr><td>" . date(\Contao\Config::get('datimFormat'), $logEntries->tstamp) . "</td>\t<td>" . $logEntries->username . "</td>\t<td>" . $logEntries->text . "</td></tr>\n";
 			$mail->html .= "</tbody></table></body></html>";
 
 			$mail->text = strip_tags($mail->html);
-			$mail->sendTo($GLOBALS['TL_CONFIG']['adminEmail']);
+			$mail->sendTo(\Contao\Config::get('adminEmail'));
 		}
 	}
 }
