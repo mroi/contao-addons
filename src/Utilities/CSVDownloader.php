@@ -121,20 +121,21 @@ class CSVDownloader {
 		if (isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$column]['foreignKey'])) {
 			$foreignKey = explode('.', $GLOBALS['TL_DCA'][$dc->table]['fields'][$column]['foreignKey'], 2);
 			foreach ($arrValue as &$sub) {
-				if (!isset($this->arrForeignCache[$sub])) {
+				$cacheKey = "{$foreignKey[0]}.{$foreignKey[1]}.{$sub}";
+				if (!isset($this->arrForeignCache[$cacheKey])) {
 					$objForeign = $dc->Database
 						->prepare('SELECT ' . $foreignKey[1] . ' AS value FROM ' . $foreignKey[0] . ' WHERE id=?')
 						->limit(1)
 						->execute($sub);
 					if ($objForeign->numRows)
-						$this->arrForeignCache[$sub] = $objForeign->value;
+						$this->arrForeignCache[$cacheKey] = $objForeign->value;
 					else
-						$this->arrForeignCache[$sub] = '(?)';
+						$this->arrForeignCache[$cacheKey] = '(?)';
 					// size-constrain the cache
 					if (count($this->arrForeignCache) > 128)
 						array_shift($this->arrForeignCache);
 				}
-				$sub = $this->arrForeignCache[$sub];
+				$sub = $this->arrForeignCache[$cacheKey];
 			}
 		}
 
