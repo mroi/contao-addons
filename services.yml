@@ -1,4 +1,8 @@
 services:
+    Mroi\ContaoAddons\Utilities\CSVDownloader:
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+            - { name: contao.hook, hook: loadLanguageFile }
     Mroi\ContaoAddons\Utilities\LogMailer:
         arguments:
             - '@Contao\CoreBundle\Repository\CronJobRepository'

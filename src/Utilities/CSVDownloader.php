@@ -20,7 +20,7 @@ class CSVDownloader {
 	/* cache for foreign key resolution */
 	private $arrForeignCache = array();
 
-	public function loadDataContainerHook($strName) {
+	public function onLoadDataContainer($strName) {
 		if (array_key_exists($strName, $this->arrDCAs)) {
 			// create the CSV download operation
 			$arrOperation = array(
@@ -48,7 +48,7 @@ class CSVDownloader {
 		}
 	}
 
-	public function loadLanguageFileHook($strName, $strLanguage) {
+	public function onLoadLanguageFile($strName, $strLanguage) {
 		if (array_key_exists($strName, $this->arrDCAs)) {
 			switch (true) {
 			case substr($strLanguage, 0, 2) == 'de':
