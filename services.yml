@@ -5,6 +5,6 @@ services:
             - { name: contao.hook, hook: loadLanguageFile }
     Mroi\ContaoAddons\Utilities\LogMailer:
         arguments:
-            - '@Contao\CoreBundle\Repository\CronJobRepository'
+            - '@contao.repository.cron_job'
         tags:
             - { name: contao.cronjob, interval: daily }

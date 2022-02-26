@@ -65,7 +65,7 @@ class CSVDownloader {
 
 	public function exportCSV(\Contao\DataContainer $dc) {
 		// make sure we are operating on a simple table (i.e. not a tree)
-		if (!is_a($dc, 'Contao\DC_Table') || $dc->rootIds !== null) {
+		if (!is_a($dc, \Contao\DC_Table::class) || !empty($dc->rootIds)) {
 			\Contao\System::log('Data container "' . $dc->table . '" not suitable for CSV export', __METHOD__, TL_ERROR);
 			exit;
 		}
